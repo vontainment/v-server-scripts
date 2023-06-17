@@ -1,0 +1,21 @@
+[Unit]
+Description=VM Terminal on tty2
+After=network.target getty@tty1.service
+
+[Service]
+ExecStart=/usr/sbin/qm terminal 5200
+StandardInput=tty
+StandardOutput=tty
+TTYPath=/dev/tty2
+TTYReset=yes
+TTYVHangup=yes
+TTYVTDisallocate=yes
+IgnoreSIGPIPE=no
+SendSIGHUP=yes
+User=root
+Type=idle
+Restart=always
+RestartSec=0
+
+[Install]
+WantedBy=multi-user.target

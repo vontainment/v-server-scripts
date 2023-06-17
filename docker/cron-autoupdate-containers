@@ -1,0 +1,34 @@
+#!/bin/bash
+##############################################
+#  Project: Auto Update Docker Cron          #
+#  Author: Vontainment                       #
+#  URL: https://vontainment.com              #
+#  Description: Drop into cron directory     #
+##############################################
+
+# For each container
+for container in $containers
+do
+    # Get the image for this container
+    image=$(docker inspect -f '{{.Config.Image}}' $container)
+
+    # Stop the container
+    echo "Stopping container: $container"
+    docker stop $container
+
+    # Delete the container
+    echo "Removing container: $container"
+    docker rm $container
+
+    # Pull the latest image
+    echo "Pulling latest image for: $image"
+    docker pull $image
+
+    # Start a new container with the latest image
+    echo "Starting new container of: $image"
+    docker run -d $image
+done
+
+# Remove unused images
+echo "Removing unused images"
+docker image prune -f
